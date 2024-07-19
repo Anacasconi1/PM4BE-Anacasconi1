@@ -6,7 +6,7 @@ import { AuthRepository } from './auth.repository';
 export class AuthService {
   constructor (private authRepository: AuthRepository){}
   SignIn(AuthDto: AuthDto) {
-    const credentialsAuth = this.authRepository.SignInCredentials(AuthDto)
+    const credentialsAuth = this.authRepository.SignInCredentials(AuthDto);
     return credentialsAuth;
   }
 

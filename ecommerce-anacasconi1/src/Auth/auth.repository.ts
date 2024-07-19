@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { UsersRepository } from 'src/users/users.repository';
 import { Auth } from './entities/auth.entity';
-import { AuthDto } from './dto/auth.dto';
 
 @Injectable()
 export class AuthRepository {
@@ -21,10 +20,9 @@ export class AuthRepository {
 
   private auths: Auth[] = this.usersCredential();
 
-  SignInCredentials (AuthDto: AuthDto) {
-    
-    if (AuthDto.email && AuthDto.password) {
-        const credentialFinder = this.auths.find(credentials => credentials.email === AuthDto.email && credentials.password=== AuthDto.password)     
+  SignInCredentials ({email, password}) {
+        if (email && password) {
+        const credentialFinder = this.auths.find(credentials => credentials.email === email && credentials.password === password)     
         if(!credentialFinder) {
             return {
                 message: "Email o contraseña incorrectos"
@@ -36,7 +34,7 @@ export class AuthRepository {
         }
     }else {
         return {
-            message: "Ingresa email y constraseña"
+            message: "Ingresa email y/o constraseña"
         }
     }
     }

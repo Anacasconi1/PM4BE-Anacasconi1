@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Post, Put, Delete, Body, HttpCode, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, Post, Put, Delete, Body, HttpCode, Query, UseGuards, Headers } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UserDto } from './dto/user.dto';
 import { AuthGuard } from 'src/guards/Auth.guard';
@@ -10,10 +10,13 @@ export class UsersController {
   @HttpCode(200)
   @Get()
   @UseGuards(AuthGuard)
-  findAll (@Query('page') page?:string, @Query('limit') limit?: string) {
-    this.usersService.queryParamsLimitPage(limit, page)
-    const users = this.usersService.findAll()
-    return users
+  findAll (@Query('page') page?:string, @Query('limit') limit?: string, @Headers('authorization') authorization? : string) {
+    if (authorization) {
+      this.usersService.queryParamsLimitPage(limit, page)
+      const users = this.usersService.findAll()
+      return users
+    }
+    return "Usuario no autorizado"
   }
 
   @HttpCode(201)
