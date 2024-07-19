@@ -12,8 +12,8 @@ export class UsersController {
   @UseGuards(AuthGuard)
   findAll (@Query('page') page?:string, @Query('limit') limit?: string, @Headers('authorization') authorization? : string) {
     if (authorization) {
-      this.usersService.queryParamsLimitPage(limit, page)
-      const users = this.usersService.findAll()
+      this.usersService.queryParamsLimitPage(Number(limit), Number(page))
+      const users = this.usersService.findAll(Number(limit), Number(page))
       return users
     }
     return "Usuario no autorizado"
@@ -46,7 +46,7 @@ export class UsersController {
   @Get(':id')
   @UseGuards(AuthGuard)
   findOne(@Param('id') id: string, @Query('page') page?:string, @Query('limit') limit?: string) {
-    this.usersService.queryParamsLimitPage(limit, page)
+    this.usersService.queryParamsLimitPage(Number(limit), Number(page))
     const user = this.usersService.findOneById(Number(id))
     return user
   }

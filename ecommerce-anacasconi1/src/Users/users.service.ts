@@ -10,8 +10,8 @@ export class UsersService {
     return newUserID;
   }
 
-  findAll() {
-    return this.usersRepository.getUsers();
+  findAll(limit: number, page: number) {
+    return this.usersRepository.getUsers(limit, page);
   }
 
   findOneById(id: number) {
@@ -35,7 +35,7 @@ export class UsersService {
 		};
   }
 
-	queryParamsLimitPage (limit: string, page:string){
+	queryParamsLimitPage (limit: number, page:number){
 		this.usersRepository.queryParamsLimitAndPage(limit, page)
 	}
 }

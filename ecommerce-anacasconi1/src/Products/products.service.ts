@@ -10,8 +10,8 @@ export class ProductsService {
     return newProduct;
   }
 
-  findAll() {
-    const products = this.productsRepository.getProducts();
+  findAll(limit: number, page:number) {
+    const products = this.productsRepository.getProducts(limit, page);
     return products
   }
 
@@ -35,7 +35,7 @@ export class ProductsService {
       removedProductId
     }
   }
-  queryParamsLimitPage (limit: string, page:string){
+  queryParamsLimitPage (limit: number, page: number){
 		this.productsRepository.queryParamsLimitAndPage(limit, page)
 	}
 }

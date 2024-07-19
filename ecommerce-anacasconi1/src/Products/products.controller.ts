@@ -10,8 +10,8 @@ export class ProductsController {
   @HttpCode(200)
   @Get()
   findAll(@Query('page') page?:string, @Query('limit') limit?: string) {
-    this.productsService.queryParamsLimitPage(limit, page)
-    return this.productsService.findAll();
+    this.productsService.queryParamsLimitPage(Number(limit), Number(page))
+    return this.productsService.findAll(Number(limit), Number(page));
   }
 
   @HttpCode(201)
@@ -40,8 +40,7 @@ export class ProductsController {
 
   @HttpCode(200)
   @Get(':id')
-  findOne(@Param('id') id: string, @Query('page') page?:string, @Query('limit') limit?: string) {
-    this.productsService.queryParamsLimitPage(limit, page)
+  findOne(@Param('id') id: string) {
     const user = this.productsService.findOneById(Number(id));
     return user 
   }

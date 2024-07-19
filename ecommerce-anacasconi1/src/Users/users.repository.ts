@@ -56,13 +56,16 @@ export class UsersRepository {
     };
     return user;
   }
-  getUsersComplete () {
-    return this.users
+  getUsersComplete() {
+    return this.users;
   }
 
-  getUsers() {
+  getUsers(limit: number, page: number) {
     const response = this.users.map((user) => this.filterForPassword(user));
-    return response;
+    const start = (page - 1) * limit;
+    const end = start / limit;
+    const sliced = response.slice(start, end);
+    return sliced;
   }
 
   getUserById(id) {
@@ -71,38 +74,38 @@ export class UsersRepository {
     const response = this.filterForPassword(user);
     return response;
   }
-  
-  createUser(user:UserDto) {
+
+  createUser(user: UserDto) {
     const id = this.users.length + 1;
-    this.users.push({id, ...user})
+    this.users.push({ id, ...user });
     return {
-      message: "usuario creado con exito",
-      id
-    }
+      message: 'usuario creado con exito',
+      id,
+    };
   }
 
-  updateUser (newUser: UserDto, id: number) {
-    const user = this.users.find(user => user.id === id);
-    user.email = newUser.email
-    user.name = newUser.name
-    user.phone = newUser.phone
-    user.password = newUser.password
-    user.address = newUser.address
-    user.city = newUser.city
-    user.country = newUser.country
-    return id
+  updateUser(newUser: UserDto, id: number) {
+    const user = this.users.find((user) => user.id === id);
+    user.email = newUser.email;
+    user.name = newUser.name;
+    user.phone = newUser.phone;
+    user.password = newUser.password;
+    user.address = newUser.address;
+    user.city = newUser.city;
+    user.country = newUser.country;
+    return id;
   }
 
-  removeUser (id: number) {
-    this.users.filter(user => user.id !== id)
-    return id
-    }
+  removeUser(id: number) {
+    this.users.filter((user) => user.id !== id);
+    return id;
+  }
 
-  queryParamsLimitAndPage (limit: string, page: string) {
-    if(!page){
-      page = "1"
-    } else if (!limit){
-      limit = "5"
+  queryParamsLimitAndPage(limit: number, page: number) {
+    if (!page) {
+      page = 1;
+    } else if (!limit) {
+      limit = 5;
     }
   }
 }
