@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { Product } from "./entities/product.entity";
+import { ProductDto } from "./dto/product.dto";
 
 @Injectable()
 export class ProductsRepository {
@@ -34,7 +35,45 @@ export class ProductsRepository {
             stock: true
         }
     ]
-    async getProducts (){
-        return await this.products
+    getProducts (){
+        return this.products
     }
+
+    getProductsById(id: number){
+        const product = this.products.find(product => product.id === id)
+        return product
+    }
+
+    createProducts (product: ProductDto) {
+        const id = this.products.length + 1;
+        this.products.push({id, ...product})
+        return {
+            message: "Producto creado con exito",
+            id
+        }
+    }
+
+    updateProduct (newProduct: ProductDto, id: number){
+        const product = this.products.find(product => product.id === id)
+        product.imgUrl = newProduct.imgUrl
+        product.description = newProduct.description
+        product.name = newProduct.name
+        product.price = newProduct.price
+        product.stock = newProduct.stock
+        return id
+    }
+
+    removeProduct (id: number) {
+        this.products.filter(product => product.id !== id)
+        return id
+    }
+
+    queryParamsLimitAndPage (limit: string, page: string) {
+        if(!page){
+          page = "1"
+        } else if (!limit){
+          limit = "5"
+        }
+      }
+
 }

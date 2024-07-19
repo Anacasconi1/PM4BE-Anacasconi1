@@ -1,34 +1,50 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Param, Post, Put, Delete, Body, HttpCode, Query, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
-// import { CreateUserDto } from './dto/create-user.dto';
-// import { UpdateUserDto } from './dto/update-user.dto';
+import { UserDto } from './dto/user.dto';
+import { AuthGuard } from 'src/guards/Auth.guard';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  // @Post()
-  // create(@Body() createUserDto: CreateUserDto) {
-  //   return this.usersService.create(createUserDto);
-  // }
-
+  @HttpCode(200)
   @Get()
-  findAll() {
-    return this.usersService.findAll();
+  @UseGuards(AuthGuard)
+  findAll (@Query('page') page?:string, @Query('limit') limit?: string) {
+    this.usersService.queryParamsLimitPage(limit, page)
+    const users = this.usersService.findAll()
+    return users
   }
 
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.usersService.findOne(+id);
-  // }
+  @HttpCode(201)
+  @Post()
+  create(@Body() UserDto: UserDto) {
+    const newUserId = this.usersService.create(UserDto);
+    return newUserId
+  }
+  
+  @HttpCode(200)
+  @Put(':id')
+  @UseGuards(AuthGuard)
+  update(@Param('id') id: string, @Body() UserDto: UserDto) {
+    const userUpdatedId = this.usersService.update(Number(id), UserDto);
+    return userUpdatedId
+  }
+  
+  @HttpCode(200)
+  @Delete(':id')
+  @UseGuards(AuthGuard)
+  remove(@Param('id') id: string) {
+    const userRemovedId = this.usersService.remove(Number(id));
+    return userRemovedId
+  }
 
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-  //   return this.usersService.update(+id, updateUserDto);
-  // }
-
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.usersService.remove(+id);
-  // }
+  @HttpCode(200)
+  @Get(':id')
+  @UseGuards(AuthGuard)
+  findOne(@Param('id') id: string, @Query('page') page?:string, @Query('limit') limit?: string) {
+    this.usersService.queryParamsLimitPage(limit, page)
+    const user = this.usersService.findOneById(Number(id))
+    return user
+  }
 }
