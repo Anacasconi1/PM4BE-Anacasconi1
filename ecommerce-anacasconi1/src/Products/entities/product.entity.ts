@@ -1,13 +1,32 @@
-export class Product {
-  id: number;
+import { Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Category } from "src/Categories/entities/category.entity";
+import { OrderDetails } from "src/Orders/entities/orderDetails.entity";
+import {v4 as uuid} from 'uuid'
 
+@Entity()
+export class Product {
+  @PrimaryGeneratedColumn('uuid')
+  id: string = uuid();
+
+  @Column({length: 50, unique: true})
   name: string;
 
+  @Column({type: "text"})
   description: string;
 
+  @Column({type: "decimal" })
   price: number;
 
-  stock: boolean;
+  @Column({type: "integer"})
+  stock: number;
 
+  @Column({type: "text", default: "https://exampleImage.com"})
   imgUrl: string;
+
+  @ManyToOne(()=> Category, category => category.products)
+  category: Category
+
+  @ManyToMany(()=> OrderDetails, orderDetails => orderDetails.products)
+  @JoinTable()
+  orderDetails: OrderDetails[]
 }

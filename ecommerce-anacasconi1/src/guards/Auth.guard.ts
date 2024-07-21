@@ -1,11 +1,9 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Observable } from 'rxjs';
-import { AuthRepository } from 'src/auth/auth.repository';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  constructor(private authRepository: AuthRepository) {}
-  private credentials = this.authRepository.usersCredential();
+  constructor() {}
   canActivate(
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
@@ -21,14 +19,10 @@ export class AuthGuard implements CanActivate {
         const creds = header.split(' ')[1];
         const email = creds.split(':')[0];
         const password = creds.split(':')[1];
-        const credentialFinder = this.credentials.find(
-          (credentials) =>
-            credentials.email === email && credentials.password === password,
-        );
-        if (!credentialFinder) {
-          return false;
+        if(!email || !password){
+          return false
         }
-        return true;
+        return true
       }
     }
   }
