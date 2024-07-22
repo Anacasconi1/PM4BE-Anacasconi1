@@ -31,7 +31,6 @@ import { Product } from './products/entities/product.entity';
         dropSchema: false,
         entities: ['dist/**/*.entity{.ts,.js}', Product],
       })
-      
     }),
     ProductsModule,
     UsersModule,

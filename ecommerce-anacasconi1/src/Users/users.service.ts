@@ -10,19 +10,26 @@ export class UsersService {
     @InjectRepository(User)
     private userRepository: Repository<User>,
   ){}
-  create(createUser) {
+  createUser(createUser) {
     const newUserID = this.userRepository.save(createUser)
     return newUserID;
   }
 
   async findAll() {
-    return await this.userRepository.find();
+    return await this.userRepository.find({relations: {
+      orders: true
+    }});
   }
 
-  // findOneById(id: number) {
-  //   const user = this.usersRepository.getUserById(id);
-  //   return user;
-  // }
+  findOneById(id) {
+    const user = this.userRepository.findOne({where: {
+      id: id
+    }, relations: {
+      orders:true
+    }})
+    console.log(user);
+    
+  }
 
   // update(id: number, UserDto: UserDto) {
   //   const userUpdatedId = this.usersRepository.updateUser(UserDto, id)

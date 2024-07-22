@@ -19,16 +19,16 @@ export class User {
   @Column({length:20})
   password: string;
   
-  @Column({type: "integer"})
+  @Column({type: "bigint"})
   phone: number;
   
   @Column({type: "text"})
   address: string;
 
-  @Column({length:50})
+  @Column({length:50, nullable: true})
   country?: string | undefined;
 
-  @Column({length:50})
+  @Column({length:50, nullable: true})
   city?: string | undefined;
 
   @OneToMany(()=> Order, (order) => order.user)

@@ -15,4 +15,9 @@ export class ProductsController {
     return await this.productsService.createProduct(product)
   }
 
+  @Post('/seeder')
+  async Seeder(@Body() product){
+    return await this.productsService.postSeed(product)
+  }
+
 }

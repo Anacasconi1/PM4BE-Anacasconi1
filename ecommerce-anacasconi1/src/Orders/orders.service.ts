@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Order } from './entities/order.entity';
-import { Repository } from 'typeorm';
+import { MoreThan, Repository } from 'typeorm';
 import { OrderDetails } from 'src/Orders/entities/orderDetails.entity';
 import { User } from 'src/users/entities/user.entity';
-// import { OrderDto } from './dto/create-order.dto';
 import { Product } from 'src/Products/entities/product.entity';
+import { In } from 'typeorm';
 
 @Injectable()
 export class OrdersService {
@@ -17,25 +17,48 @@ export class OrdersService {
     @InjectRepository(User)
     private userRepository: Repository<User>,
     @InjectRepository(Product)
-    private productsRepository: Repository<Product>
-  ){}
-  
-  async addOrder(userId, productsid) {
-    const productsById = await this.productsRepository.find({where: {id: productsid}})
-    const user = await this.userRepository.findOne({where: { id : userId}})
-    const price = productsById.map(product => product.price)
-    const detailPrice = price.reduce((acum, current)=> Number(acum) + Number(current), 0 )
-    const date = new Date().toLocaleString()
+    private productsRepository: Repository<Product>,
+  ) {}
 
+  async addOrder(order) {
+    const id = order.user;
+    const productsId = order.products;
+    const prod = productsId.map((prodid) => prodid.id);
+    const allProdsById = await this.productsRepository.find({
+      where: { id: In(prod), stock: MoreThan(0) },
+    });
+
+    allProdsById.map(async prod => {
+      await this.productsRepository.save({stock: prod.stock -1,  ...prod})
+      console.log("se cambio el stock");
+      
+    })
+    
+    const userid = await this.userRepository.findOne({ where: { id: id } });
+    const price = await allProdsById.map((product) => product.price);
+    const detailPrice = price.reduce(
+      (acum, current) => Number(acum) + Number(current),
+      0,
+    );
+    const date = new Date().toLocaleString();
     const detail = {
       price: detailPrice,
-      products: productsById
-    } 
-
-    const orderDetail = await this.orderDetailsRepository.create(detail)
-    const order = await this.ordersRepository.create({user, date, ...orderDetail})
-    const response = await this.ordersRepository.save(order)
-    return response
+      products: allProdsById,
+      
+    };
+    const orderDetails = await this.orderDetailsRepository.save(detail)
+    const neworder = this.ordersRepository.create({
+      user: userid,
+      date,
+      orderDetails
+    });
+    
+    const response = await this.ordersRepository.save(neworder);
+    return response;
   }
 
+  async getOrder(id){
+    const order = await this.ordersRepository.findOne({where: {id: id}})
+    return order
+  }
 }

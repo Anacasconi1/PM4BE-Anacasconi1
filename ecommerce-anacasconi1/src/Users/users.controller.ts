@@ -1,11 +1,11 @@
 import {
   Controller,
   Get,
-  // Param,
-  // Post,
+  Param,
+  Post,
   // Put,
   // Delete,
-  // Body,
+  Body,
   HttpCode,
   Query,
   UseGuards,
@@ -28,12 +28,12 @@ export class UsersController {
     }
     return "Usuario no autorizado"
   }
-  // @HttpCode(201)
-  // @Post()
-  // create(@Body() UserDto: UserDto) {
-  //   const newUserId = this.usersService.create(UserDto);
-  //   return newUserId
-  // }
+  @HttpCode(201)
+  @Post()
+  create(@Body() UserDto) {
+    const newUserId = this.usersService.createUser(UserDto);
+    return newUserId
+  }
   // @HttpCode(200)
   // @Put(':id')
   // @UseGuards(AuthGuard)
@@ -48,12 +48,11 @@ export class UsersController {
   //   const userRemovedId = this.usersService.remove(Number(id));
   //   return userRemovedId
   // }
-  // @HttpCode(200)
-  // @Get(':id')
-  // @UseGuards(AuthGuard)
-  // findOne(@Param('id') id: string, @Query('page') page?:string, @Query('limit') limit?: string) {
-  //   this.usersService.queryParamsLimitPage(Number(limit), Number(page))
-  //   const user = this.usersService.findOneById(Number(id))
-  //   return user
-  // }
+  @HttpCode(200)
+  @Get(':id')
+  @UseGuards(AuthGuard)
+  findOne(@Param('id') id: string) {
+    const user = this.usersService.findOneById(id)
+    return user
+  }
 }
