@@ -1,15 +1,29 @@
+import { IsEmail, IsInt, IsNotEmpty, IsString, Length, Matches} from "class-validator";
+
 export class UserDto {
+    @IsNotEmpty()
+    @Length(3, 80)
+    name: string;
+    
+    @IsEmail()
     email: string;
 
-    name: string;
-
+    @Matches(/^(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]+$/)
+    @Length(8, 15)
     password: string;
 
+    @Length(3, 80)
     address: string;
 
-    phone: string;
+    @IsNotEmpty()
+    @IsInt()
+    phone: number;
 
+    @IsString()
+    @Length(5, 20)
     country?: string | undefined;
-
+    
+    @IsString()
+    @Length(5, 20)
     city?: string | undefined;
 }

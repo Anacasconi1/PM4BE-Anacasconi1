@@ -1,30 +1,27 @@
 import { Injectable } from '@nestjs/common';
+import { LoginUserDto } from './dto/loginUser.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { User } from 'src/users/entities/user.entity';
+import { Repository } from 'typeorm';
 
-// import { AuthDto } from './dto/auth.dto';
 
 @Injectable()
 export class AuthService {
+  constructor(
+    @InjectRepository(User)
+    private userRepository: Repository<User>
+  ){}
   
-  // SignIn(AuthDto: AuthDto) {
-  //   const credentialsAuth = this.authRepository.SignInCredentials(AuthDto);
-  //   return credentialsAuth;
-  // }
-
-  // findAll() {
-  //   return this.authRepository.usersCredential()
-  // }
-
-  // findOne(id: number) {
-  //   return `This action returns a #${id} auth`;
-  // }
-
-  // update(id: number, AuthDto: AuthDto) {
-  //   console.log(AuthDto);
-    
-  //   return `This action updates a #${id} auth`;
-  // }
-
-  // remove(id: number) {
-  //   return `This action removes a #${id} auth`;
-  // }
+  SignIn(Credentials: LoginUserDto) {
+    const credentialsAuth = this.userRepository.findOne({where: {
+      email: Credentials.email,
+      password: Credentials.password
+    }})
+    if(credentialsAuth){
+      return {message: "Credenciales correctas"}
+    }else{
+      return {message: "Ingresa las credenciales correctas"}
+    }
+  }
+  
 }

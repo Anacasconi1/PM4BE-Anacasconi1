@@ -3,17 +3,21 @@ import {
   Get,
   Param,
   Post,
-  // Put,
-  // Delete,
+  Put,
+  Delete,
   Body,
   HttpCode,
   Query,
   UseGuards,
   Headers,
+  ParseUUIDPipe,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-// import { UserDto } from './dto/user.dto';
+import { UserDto } from './dto/user.dto';
 import { AuthGuard } from 'src/guards/Auth.guard';
+import { User } from './entities/user.entity';
+
+
 
 @Controller('users')
 export class UsersController {
@@ -21,38 +25,43 @@ export class UsersController {
   @HttpCode(200)
   @Get()
   @UseGuards(AuthGuard)
-  findAll (@Query('page') page?:string, @Query('limit') limit?: string, @Headers('authorization') authorization? : string) {
+  async findAll(
+    @Query('page') page?: string,
+    @Query('limit') limit?: string,
+    @Headers('authorization') authorization?: string,
+  ) {
     if (authorization) {
-      const users = this.usersService.findAll()
+      const users = await this.usersService.findAll(Number(limit), Number(page));
       return users
     }
-    return "Usuario no autorizado"
+    return 'Usuario no autorizado';
   }
   @HttpCode(201)
   @Post()
   create(@Body() UserDto) {
     const newUserId = this.usersService.createUser(UserDto);
-    return newUserId
+    return newUserId;
   }
-  // @HttpCode(200)
-  // @Put(':id')
-  // @UseGuards(AuthGuard)
-  // update(@Param('id') id: string, @Body() UserDto: UserDto) {
-  //   const userUpdatedId = this.usersService.update(Number(id), UserDto);
-  //   return userUpdatedId
-  // }
-  // @HttpCode(200)
-  // @Delete(':id')
-  // @UseGuards(AuthGuard)
-  // remove(@Param('id') id: string) {
-  //   const userRemovedId = this.usersService.remove(Number(id));
-  //   return userRemovedId
-  // }
+  
+  @HttpCode(200)
+  @Put(':id')
+  @UseGuards(AuthGuard)
+  update(@Param('id', ParseUUIDPipe) id: string, @Body() UserDto: UserDto) {
+    const userUpdatedId = this.usersService.UpdateUser(id, UserDto);
+    return userUpdatedId;
+  }
+  @HttpCode(200)
+  @Delete(':id')
+  @UseGuards(AuthGuard)
+  remove(@Param('id', ParseUUIDPipe) id: string) {
+    const userRemovedId = this.usersService.DeleteUser(id);
+    return userRemovedId;
+  }
   @HttpCode(200)
   @Get(':id')
   @UseGuards(AuthGuard)
-  findOne(@Param('id') id: string) {
-    const user = this.usersService.findOneById(id)
-    return user
+  findOne(@Param('id', ParseUUIDPipe) id: string): Omit<User, User["password"]> {
+    const user = this.usersService.findOneById(id);
+    return user;
   }
 }

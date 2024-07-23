@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseUUIDPipe, Post } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 
 
@@ -7,7 +7,7 @@ import { OrdersService } from './orders.service';
 export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
   @Get(':id')
-  async getOrder(@Param('id') id){
+  async getOrder(@Param('id', ParseUUIDPipe) id){
     return await this.ordersService.getOrder(id)
   }
 
