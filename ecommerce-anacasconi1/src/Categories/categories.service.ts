@@ -23,8 +23,9 @@ export class CategoriesService {
     return mapped
   }
   
-  addCategory(category: Category) {
-    return category
+  async addCategory(category: Category) {
+    const newCategory = await this.categoriesRepository.save(category)
+    return newCategory
   }
 
   async getCategories () {

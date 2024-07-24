@@ -12,9 +12,10 @@ export class CategoriesController {
   }
 
   @Post()
-  create(@Body() category: Category) {
-    return this.categoriesService.addCategory(category);
+  async create(@Body() category: Category) {
+    return await this.categoriesService.addCategory(category);
   }
+  
   @Get()
   findAll() {
     return this.categoriesService.getCategories();

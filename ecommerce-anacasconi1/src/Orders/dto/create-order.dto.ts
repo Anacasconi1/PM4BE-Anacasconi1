@@ -1,6 +1,6 @@
-import { PartialType } from "@nestjs/mapped-types"
-import { ArrayContains, ArrayNotEmpty, IsArray, IsNotEmpty, IsUUID } from "class-validator"
-import { Product } from "src/Products/entities/product.entity"
+
+import { ArrayNotEmpty, IsArray, IsNotEmpty, IsUUID } from "class-validator"
+import { Product } from "src/products/entities/Product.entity"
 
 
 export class OrderDto {
@@ -10,6 +10,5 @@ export class OrderDto {
 
     @IsArray()
     @ArrayNotEmpty()
-    @ArrayContains([PartialType<Product>])
-    products: Partial<Product>[]
+    products: Partial<Product[]>
 }

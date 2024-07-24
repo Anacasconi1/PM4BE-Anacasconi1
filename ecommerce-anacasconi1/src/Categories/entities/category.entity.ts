@@ -1,5 +1,5 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { Product } from "src/Products/entities/product.entity";
+import { Product } from "src/products/entities/Product.entity";
 import {v4 as uuid} from 'uuid'
 
 @Entity()

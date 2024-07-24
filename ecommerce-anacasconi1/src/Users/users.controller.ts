@@ -11,6 +11,8 @@ import {
   UseGuards,
   Headers,
   ParseUUIDPipe,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UserDto } from './dto/user.dto';
@@ -22,6 +24,7 @@ import { User } from './entities/user.entity';
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
+  
   @HttpCode(200)
   @Get()
   @UseGuards(AuthGuard)
@@ -30,15 +33,20 @@ export class UsersController {
     @Query('limit') limit?: string,
     @Headers('authorization') authorization?: string,
   ) {
-    if (authorization) {
+    try {
       const users = await this.usersService.findAll(Number(limit), Number(page));
       return users
+    } catch (error) {
+      throw new HttpException({
+        status: HttpStatus.NOT_FOUND,
+        error: "No es posible traer a todos los usuarios, revisa la peticion o que estes autorizado"
+      }, 404)
     }
-    return 'Usuario no autorizado';
   }
+
   @HttpCode(201)
   @Post()
-  create(@Body() UserDto) {
+  create(@Body() UserDto: UserDto) {
     const newUserId = this.usersService.createUser(UserDto);
     return newUserId;
   }

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Product } from './entities/product.entity';
+import { Product } from './entities/Product.entity';
 import { Repository } from 'typeorm';
 import { Category } from 'src/Categories/entities/category.entity';
 
@@ -64,7 +64,8 @@ export class ProductsService {
   async updateProduct(id: string, productDto) {
     const checkIfProductExist = await this.productRepository.findOne({where: {id:id}})
     if(checkIfProductExist){
-      const productUpdated = await this.productRepository.update(id, productDto)
+      const {imgUrl, ...product} = productDto
+      const productUpdated = await this.productRepository.update(id, {...product})
       return {
         message: "El producto fue actualizado con exito",
         productUpdated 
