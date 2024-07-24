@@ -2,14 +2,12 @@ import {
   Controller,
   Get,
   Param,
-  Post,
   Put,
   Delete,
   Body,
   HttpCode,
   Query,
   UseGuards,
-  Headers,
   ParseUUIDPipe,
   HttpException,
   HttpStatus,
@@ -19,38 +17,32 @@ import { UserDto } from './dto/user.dto';
 import { AuthGuard } from 'src/guards/Auth.guard';
 import { User } from './entities/user.entity';
 
-
-
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
-  
+
   @HttpCode(200)
   @Get()
   @UseGuards(AuthGuard)
-  async findAll(
-    @Query('page') page?: string,
-    @Query('limit') limit?: string,
-    @Headers('authorization') authorization?: string,
-  ) {
+  async findAll(@Query('page') page?: string, @Query('limit') limit?: string) {
     try {
-      const users = await this.usersService.findAll(Number(limit), Number(page));
-      return users
+      const users = await this.usersService.findAll(
+        Number(limit),
+        Number(page),
+      );
+      return users;
     } catch (error) {
-      throw new HttpException({
-        status: HttpStatus.NOT_FOUND,
-        error: "No es posible traer a todos los usuarios, revisa la peticion o que estes autorizado"
-      }, 404)
+      throw new HttpException(
+        {
+          status: HttpStatus.NOT_FOUND,
+          error:
+            'No es posible traer a todos los usuarios, revisa la peticion o que estes autorizado',
+        },
+        404,
+      );
     }
   }
 
-  @HttpCode(201)
-  @Post()
-  create(@Body() UserDto: UserDto) {
-    const newUserId = this.usersService.createUser(UserDto);
-    return newUserId;
-  }
-  
   @HttpCode(200)
   @Put(':id')
   @UseGuards(AuthGuard)
@@ -68,7 +60,9 @@ export class UsersController {
   @HttpCode(200)
   @Get(':id')
   @UseGuards(AuthGuard)
-  findOne(@Param('id', ParseUUIDPipe) id: string): Omit<User, User["password"]> {
+  findOne(
+    @Param('id', ParseUUIDPipe) id: string,
+  ): Omit<User, User['password']> {
     const user = this.usersService.findOneById(id);
     return user;
   }

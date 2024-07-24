@@ -11,10 +11,6 @@ export class UsersService {
     @InjectRepository(User)
     private userRepository: Repository<User>,
   ){}
-  createUser(createUser): Promise<User> {
-    const newUserID = this.userRepository.save(createUser)
-    return newUserID;
-  }
 
   async findAll(limit: number, page: number){
     const users = await this.userRepository.find({relations: {

@@ -8,10 +8,12 @@ import {
   Post,
   Put,
   Query,
+  UseGuards,
 
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { Product } from './entities/Product.entity';
+import { AuthGuard } from 'src/guards/Auth.guard';
 
 @Controller('products')
 export class ProductsController {
@@ -39,6 +41,7 @@ export class ProductsController {
   }
 
   @Put(':id')
+  @UseGuards(AuthGuard)
   async UpdateProduct(@Param('id', ParseUUIDPipe) id: string, ProductDto) {
     const ProductUpdated = await this.productsService.updateProduct(
       id,

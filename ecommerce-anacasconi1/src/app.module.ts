@@ -11,6 +11,7 @@ import { OrdersModule } from './Orders/orders.module';
 import { ProductsModule } from './products/products.module';
 import { FilesModule } from './files/files.module';
 import typeormConfig from './config/typeorm';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -29,6 +30,11 @@ import typeormConfig from './config/typeorm';
     AuthModule,
     OrdersModule,
     FilesModule,
+    JwtModule.register({
+      global: true,
+      signOptions: {expiresIn: '1h'},
+      secret: process.env.JWT_SECRET
+    })
   ],
   controllers: [AppController],
   providers: [AppService],

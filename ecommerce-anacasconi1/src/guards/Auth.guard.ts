@@ -1,29 +1,34 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import { Observable } from 'rxjs';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  constructor() {}
+  constructor(
+    private readonly jwtService: JwtService
+  ) {}
   canActivate(
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
     const req = context.switchToHttp().getRequest();
-    return this.handlerGuardAuthorization(req);
-  }
-  handlerGuardAuthorization(request) {
-    if (request) {
-      const header = request.headers.authorization;
-      if (!header || !header.startsWith('Basic ')) {
-        return false;
-      } else {
-        const creds = header.split(' ')[1];
-        const email = creds.split(':')[0];
-        const password = creds.split(':')[1];
-        if(!email || !password){
-          return false
-        }
-        return true
-      }
+    const bearer = req.headers.authorization?.split(' ')[0];
+    const token = req.headers.authorization?.split(' ')[1];
+    if (!bearer){
+      throw new UnauthorizedException('El token debe ser tipo Bearer');
+    }
+    if(!token){
+      throw new UnauthorizedException('Ingresa el token');
+    }
+    try {
+      const secret = process.env.JWT_SECRET;
+      const payload = this.jwtService.verify(token, { secret });
+      payload.exp = new Date (payload.exp * 1000);
+      payload.iat = new Date (payload.iat * 1000);
+      payload.roles = ['admin'];
+      req.user = payload;
+      return true
+    } catch (error) {
+      throw new UnauthorizedException('Token invalido')
     }
   }
 }

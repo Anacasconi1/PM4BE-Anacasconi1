@@ -7,15 +7,18 @@ import {
   ParseUUIDPipe,
   Put,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { FilesService } from './files.service';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { AuthGuard } from 'src/guards/Auth.guard';
 
 @Controller('files')
 export class FilesController {
   constructor(private readonly filesService: FilesService) {}
   @Put('uploadimage/:id')
+  @UseGuards(AuthGuard)
   @UseInterceptors(FileInterceptor('file'))
   async uploadimg (@Param('id', ParseUUIDPipe) id: string, @UploadedFile(
     new ParseFilePipe({
