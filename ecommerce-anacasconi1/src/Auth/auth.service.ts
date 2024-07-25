@@ -47,9 +47,8 @@ export class AuthService {
         const EncryptedPassword = await Bcypt.hash(UserDto.password, 10)
         console.log(EncryptedPassword);
         const newUser = await this.userRepository.save({...UserDto, password: EncryptedPassword})
-        const {password, passwordConfirm,  ...userClean} = newUser
         return {message: "Usuario creado con exito", 
-          userClean
+          newUser
         }
       }else{
         throw new BadRequestException('Las contraseñas provistas no coinciden')

@@ -11,11 +11,13 @@ import {
   ParseUUIDPipe,
   HttpException,
   HttpStatus,
+  UseInterceptors,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UserDto } from './dto/user.dto';
 import { AuthGuard } from 'src/guards/Auth.guard';
 import { User } from './entities/user.entity';
+import { TransformUser, TransformUsers } from 'src/interceptors/separatePassword';
 
 @Controller('users')
 export class UsersController {
@@ -24,6 +26,7 @@ export class UsersController {
   @HttpCode(200)
   @Get()
   @UseGuards(AuthGuard)
+  @UseInterceptors(TransformUsers)
   async findAll(@Query('page') page?: string, @Query('limit') limit?: string) {
     try {
       const users = await this.usersService.findAll(
@@ -60,10 +63,11 @@ export class UsersController {
   @HttpCode(200)
   @Get(':id')
   @UseGuards(AuthGuard)
-  findOne(
+  @UseInterceptors(TransformUser)
+  async findOne(
     @Param('id', ParseUUIDPipe) id: string,
-  ): Omit<User, User['password']> {
-    const user = this.usersService.findOneById(id);
+  ): Promise<User> {
+    const user = await this.usersService.findOneById(id);
     return user;
   }
 }

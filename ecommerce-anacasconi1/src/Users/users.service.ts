@@ -17,19 +17,21 @@ export class UsersService {
       orders: true
     }});
     const response = this.queryParamsLimitPage(Number(limit), Number(page), users)    
-    const mappedResponse = response.map(({password, ...user})=> user)
-    return mappedResponse
+    // const mappedResponse = response.map(({password, ...user})=> user)
+    // return mappedResponse
+    return response
   }
 
-  async findOneById(id: string): Promise<Partial<User> | {message}> {
+  async findOneById(id: string): Promise< any > {
     const userbyid = await this.userRepository.findOne({where: {
       id: id
     }, relations: {
       orders:true
     }})
     if(userbyid) {
-      const { password, ...user } = userbyid
-      return user
+      return {message: "Usuario creado con exito", 
+              userbyid
+              }
     }else {
       return {message: "usuario no encontrado"}
     }
