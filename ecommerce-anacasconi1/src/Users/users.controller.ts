@@ -18,6 +18,7 @@ import { UserDto } from './dto/user.dto';
 import { AuthGuard } from 'src/guards/Auth.guard';
 import { User } from './entities/user.entity';
 import { TransformUser, TransformUsers } from 'src/interceptors/separatePassword';
+import { RolesGuard } from 'src/guards/Role.guard';
 
 @Controller('users')
 export class UsersController {
@@ -25,7 +26,7 @@ export class UsersController {
 
   @HttpCode(200)
   @Get()
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, RolesGuard)
   @UseInterceptors(TransformUsers)
   async findAll(@Query('page') page?: string, @Query('limit') limit?: string) {
     try {

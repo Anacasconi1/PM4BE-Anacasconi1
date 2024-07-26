@@ -5,6 +5,7 @@ import { UserDto } from 'src/users/dto/user.dto';
 import { TransformUser } from 'src/interceptors/separatePassword';
 
 
+
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
@@ -21,4 +22,6 @@ export class AuthController {
     const newUserId = this.authService.createUser(UserDto);
     return newUserId;
   }
+
+  
 }

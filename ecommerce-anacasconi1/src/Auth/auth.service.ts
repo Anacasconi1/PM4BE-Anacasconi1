@@ -6,6 +6,7 @@ import { Repository } from 'typeorm';
 import { UserDto } from 'src/users/dto/user.dto';
 import * as Bcypt from 'bcrypt'
 import { JwtService } from '@nestjs/jwt';
+import { Role } from 'src/roles.enum';
 
 @Injectable()
 export class AuthService {
@@ -26,7 +27,8 @@ export class AuthService {
         const userPayload = {
           sub: credentialsAuth.id,
           id: credentialsAuth.id,
-          email: credentialsAuth.email
+          email: credentialsAuth.email,
+          roles: [credentialsAuth.isAdmin? Role.Admin : Role.User]
         }
         const token = this.JwtService.sign(userPayload)
         return {message: 'Inicio de sesion exitoso', token}

@@ -14,6 +14,7 @@ import {
 import { ProductsService } from './products.service';
 import { Product } from './entities/Product.entity';
 import { AuthGuard } from 'src/guards/Auth.guard';
+import { RolesGuard } from 'src/guards/Role.guard';
 
 @Controller('products')
 export class ProductsController {
@@ -41,7 +42,7 @@ export class ProductsController {
   }
 
   @Put(':id')
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, RolesGuard)
   async UpdateProduct(@Param('id', ParseUUIDPipe) id: string, ProductDto) {
     const ProductUpdated = await this.productsService.updateProduct(
       id,

@@ -17,8 +17,6 @@ export class UsersService {
       orders: true
     }});
     const response = this.queryParamsLimitPage(Number(limit), Number(page), users)    
-    // const mappedResponse = response.map(({password, ...user})=> user)
-    // return mappedResponse
     return response
   }
 

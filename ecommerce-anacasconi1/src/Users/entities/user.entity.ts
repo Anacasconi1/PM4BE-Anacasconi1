@@ -16,6 +16,9 @@ export class User {
   @Column({length:50, unique:true})
   email: string;
 
+  @Column({default: false})
+  isAdmin: boolean
+
   @Column({type: 'text'})
   password: string;
   

@@ -1,4 +1,4 @@
-import { IsEmail, IsInt, IsNotEmpty, IsOptional, IsString, Length, Matches} from "class-validator";
+import { IsEmail, IsEmpty, IsInt, IsNotEmpty, IsOptional, IsString, Length, Matches} from "class-validator";
 
 export class UserDto {
     @IsNotEmpty()
@@ -7,6 +7,9 @@ export class UserDto {
     
     @IsEmail()
     email: string;
+
+    @IsEmpty()
+    isAdmin: boolean
 
     @Matches(/^(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]+$/)
     @Length(8, 15)

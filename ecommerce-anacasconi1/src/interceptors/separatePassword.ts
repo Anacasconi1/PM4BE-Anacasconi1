@@ -6,7 +6,7 @@ export class TransformUser implements NestInterceptor  {
     intercept(context: ExecutionContext, next: CallHandler<any>): Observable<any> | Promise<Observable<any>> {
         return next.handle().pipe(map(data => {
             const user = data.newUser
-            const {password, passwordConfirm,  ...User} =user
+            const {password, passwordConfirm, isAdmin,  ...User} =user
             return {User, statusCode: context.switchToHttp().getResponse().statusCode}
         }))
     }
@@ -16,8 +16,10 @@ export class TransformUser implements NestInterceptor  {
 export class TransformUsers implements NestInterceptor  {
     intercept(context: ExecutionContext, next: CallHandler<any>): Observable<any> | Promise<Observable<any>> {
         return next.handle().pipe(map(data => {
+            console.log(typeof(data));
+            
             const User = data.map(user =>{
-                const {password,  ...cleanUser} =user
+                const {password, isAdmin,  ...cleanUser} =user
                 return cleanUser
             })
             
