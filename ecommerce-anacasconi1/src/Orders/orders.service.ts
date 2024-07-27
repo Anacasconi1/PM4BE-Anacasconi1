@@ -31,7 +31,7 @@ export class OrdersService {
       await this.productsRepository.save({stock: prod.stock -1,  ...prod})
     })
     const userid = await this.userRepository.findOne({ where: { id: id } });
-    const price = await allProdsById.map((product) => product.price);
+    const price = allProdsById.map((product) => product.price);
     const detailPrice = price.reduce(
       (acum, current) => Number(acum) + Number(current),
       0,

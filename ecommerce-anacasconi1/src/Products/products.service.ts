@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Product } from './entities/Product.entity';
 import { Repository } from 'typeorm';
 import { Category } from 'src/Categories/entities/category.entity';
-
+import * as seeder from '../helpers/sedder.json'
 
 @Injectable()
 export class ProductsService {
@@ -30,34 +30,39 @@ export class ProductsService {
   return product ? product : "No se encontró el producto"
   }
   
-  async postSeed(product) {
-    const mapped = product.map(async prod=>{
+  async postSeed() {
+    try {
+      seeder.map(async prod=>{
       const finder = await this.productRepository.find({where: {
         name: prod.name
       }, relations:{ 
         category:true
-      }}) 
-      if(!finder.length){
-        const categoryFinder = await this.categoriesRepository.find({where:{ name: prod.category}})
-        const categoria = categoryFinder[0]
-        await this.categoriesRepository.save(categoryFinder)
-        await this.productRepository.save({
-          name: prod.name,
-          description: prod.description,
-          price: prod.price,
-          stock: prod.stock,
-          category: categoria
-        })
-        return {message: `Producto ${prod.name} creado con exito`}
+      }})
+      const catFinder = await this.categoriesRepository.findOne({where:{ name: prod.category}})
+      if(!catFinder){
+        throw new ConflictException('Debes cargar la categoria antes de cargar los productos')
+      }else {
+        if(!finder.length){
+          await this.productRepository.save({
+            name: prod.name,
+            description: prod.description,
+            price: prod.price,
+            stock: prod.stock,
+            category: {
+              id: catFinder.id
+            }
+          })
       }
-      else {
-        return {message: `No se puede crear el producto ${prod.name} porque ya existe`}
       }
     })
-    return mapped
+    return 'Productos cargados con exito'
+    } catch (error) {
+      throw new ConflictException('No se pudo completar la precarga de productos')
+    }
+    
   }
   
-  async createProduct (product): Promise<Product> {
+  async createProduct (product: Partial<Product>): Promise<Product> {
     return await this.productRepository.save(product)
   }
   

@@ -6,9 +6,9 @@ import { Category } from './entities/category.entity';
 export class CategoriesController {
   constructor(private readonly categoriesService: CategoriesService) {}
 
-  @Post('/seeder')
-  Seeder(@Body() categories) {
-    return this.categoriesService.addCategories(categories);
+  @Get('/seeder')
+  async Seeder() {
+    return await this.categoriesService.addCategories();
   }
 
   @Post()

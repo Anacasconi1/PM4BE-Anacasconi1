@@ -22,5 +22,4 @@ export class AuthController {
     const newUserId = this.authService.createUser(UserDto);
     return newUserId;
   }
-  
 }
