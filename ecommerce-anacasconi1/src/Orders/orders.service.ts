@@ -6,6 +6,7 @@ import { OrderDetails } from 'src/Orders/entities/orderDetails.entity';
 import { User } from 'src/users/entities/user.entity';
 import { Product } from 'src/products/entities/Product.entity';
 import { In } from 'typeorm';
+import { OrderDto } from './dto/create-order.dto';
 
 @Injectable()
 export class OrdersService {
@@ -19,21 +20,16 @@ export class OrdersService {
     @InjectRepository(Product)
     private productsRepository: Repository<Product>,
   ) {}
-
-  async addOrder(order) {
-    const id = order.user;
+  async addOrder(order:OrderDto) {
+    const id = order.idUser;
     const productsId = order.products;
     const prod = productsId.map((prodid) => prodid.id);
     const allProdsById = await this.productsRepository.find({
       where: { id: In(prod), stock: MoreThan(0) },
     });
-
     allProdsById.map(async prod => {
       await this.productsRepository.save({stock: prod.stock -1,  ...prod})
-      console.log("se cambio el stock");
-      
     })
-    
     const userid = await this.userRepository.findOne({ where: { id: id } });
     const price = await allProdsById.map((product) => product.price);
     const detailPrice = price.reduce(
@@ -52,13 +48,15 @@ export class OrdersService {
       date,
       orderDetails
     });
-    
     const response = await this.ordersRepository.save(neworder);
     return response;
   }
 
-  async getOrder(id){
-    const order = await this.ordersRepository.findOne({where: {id: id}})
+  async getOrder(id: string){
+    const order = await this.ordersRepository.findOne({where: {id: id}, relations:{
+      user: true,
+      orderDetails: true
+    }})
     return order
   }
 }

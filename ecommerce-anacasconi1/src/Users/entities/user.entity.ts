@@ -17,7 +17,7 @@ export class User {
   email: string;
 
   @Column({default: false})
-  isAdmin: boolean
+  isadmin: boolean
 
   @Column({type: 'text'})
   password: string;

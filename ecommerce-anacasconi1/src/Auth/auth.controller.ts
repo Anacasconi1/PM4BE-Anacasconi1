@@ -2,7 +2,7 @@ import { Body, Controller, HttpCode, Post, UseInterceptors } from '@nestjs/commo
 import { AuthService } from './auth.service';
 import { LoginUserDto } from './dto/loginUser.dto';
 import { UserDto } from 'src/users/dto/user.dto';
-import { TransformUser } from 'src/interceptors/separatePassword';
+import { TransformUsers } from 'src/interceptors/separatePassword';
 
 
 
@@ -17,11 +17,10 @@ export class AuthController {
 
   @HttpCode(201)
   @Post('/signup')
-  @UseInterceptors(TransformUser)
+  @UseInterceptors(TransformUsers)
   CreateUser(@Body() UserDto: UserDto) {
     const newUserId = this.authService.createUser(UserDto);
     return newUserId;
   }
-
   
 }

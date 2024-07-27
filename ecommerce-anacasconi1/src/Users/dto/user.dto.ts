@@ -9,7 +9,7 @@ export class UserDto {
     email: string;
 
     @IsEmpty()
-    isAdmin: boolean
+    isadmin: boolean
 
     @Matches(/^(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]+$/)
     @Length(8, 15)

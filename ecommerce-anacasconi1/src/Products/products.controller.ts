@@ -39,7 +39,7 @@ export class ProductsController {
   }
 
   @Post('/seeder')
-  async Seeder(@Body() product) {
+  async Seeder(@Body() product: Partial<Product[]>) {
     return await this.productsService.postSeed(product);
   }
 

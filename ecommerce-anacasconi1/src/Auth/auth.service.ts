@@ -28,7 +28,7 @@ export class AuthService {
           sub: credentialsAuth.id,
           id: credentialsAuth.id,
           email: credentialsAuth.email,
-          roles: [credentialsAuth.isAdmin? Role.Admin : Role.User]
+          roles: [credentialsAuth.isadmin? Role.Admin : Role.User]
         }
         const token = this.JwtService.sign(userPayload)
         return {message: 'Inicio de sesion exitoso', token}

@@ -9,7 +9,7 @@ describe('Authservice', () => {
         Promise.resolve({
           name: 'Pablo',
           email: 'mail@mail.com',
-          isAdmin: false,
+          isadmin: false,
           id: 'fefgd-dfergt-grt4tret545465',
         }),
     };
