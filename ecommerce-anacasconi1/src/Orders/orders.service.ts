@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Order } from './entities/order.entity';
-import {  MoreThan, Repository } from 'typeorm';
+import { MoreThan, Repository } from 'typeorm';
 import { OrderDetails } from 'src/Orders/entities/orderDetails.entity';
 import { User } from 'src/users/entities/user.entity';
 import { Product } from 'src/products/entities/Product.entity';
@@ -20,43 +20,58 @@ export class OrdersService {
     @InjectRepository(Product)
     private productsRepository: Repository<Product>,
   ) {}
-  async addOrder(order:OrderDto) {
-    const id = order.idUser;
-    const productsId = order.products;
-    const prod = productsId.map((prodid) => prodid.id);
-    const allProdsById = await this.productsRepository.find({
-      where: { id: In(prod), stock: MoreThan(0) },
-    });
-    allProdsById.map(async prod => {
-      await this.productsRepository.save({stock: prod.stock -1,  ...prod})
-    })
-    const userid = await this.userRepository.findOne({ where: { id: id } });
-    const price = allProdsById.map((product) => product.price);
-    const detailPrice = price.reduce(
-      (acum, current) => Number(acum) + Number(current),
-      0,
-    );
-    const date = new Date().toLocaleString();
-    const detail = {
-      price: detailPrice,
-      products: allProdsById,
-      
-    };
-    const orderDetails = await this.orderDetailsRepository.save(detail)
-    const neworder = this.ordersRepository.create({
-      user: userid,
-      date,
-      orderDetails
-    });
-    const response = await this.ordersRepository.save(neworder);
-    return response;
+  async addOrder(order: OrderDto) {
+    try {
+      const id = order.idUser;
+      const productsId = order.products;
+      const prod = productsId.map((prodid) => prodid.id);
+      const allProdsById = await this.productsRepository.find({
+        where: { id: In(prod), stock: MoreThan(0) },
+      });
+      allProdsById.map(async (prod) => {
+        await this.productsRepository.save({ stock: prod.stock - 1, ...prod });
+      });
+      const userid = await this.userRepository.findOne({ where: { id: id } });
+      const price = allProdsById.map((product) => product.price);
+      const detailPrice = price.reduce(
+        (acum, current) => Number(acum) + Number(current),
+        0,
+      );
+      const date = new Date().toLocaleString();
+      const detail = {
+        price: detailPrice,
+        products: allProdsById,
+      };
+      const orderDetails = await this.orderDetailsRepository.save(detail);
+      const neworder = this.ordersRepository.create({
+        user: userid,
+        date,
+        orderDetails,
+      });
+      const response = await this.ordersRepository.save(neworder);
+      return response;
+    } catch (error) {
+      throw new BadRequestException(
+        'El registro de una nueva categoria no pudo ejecutarse, revisa tu peticion',
+      );
+    }
   }
-
-  async getOrder(id: string){
-    const order = await this.ordersRepository.findOne({where: {id: id}, relations:{
-      user: true,
-      orderDetails: true
-    }})
-    return order
+  async getOrder(id: string) {
+    try {
+      const order = await this.ordersRepository.findOne({
+        where: { id: id },
+        relations: {
+          user: true,
+          orderDetails: true,
+        },
+      });
+      if(order){
+        return order;
+      }
+    } catch (error) {
+      throw new NotFoundException(
+        'No se encontró la orden requerida, puede que no exista o que el id ingresado no sea el correcto',
+      );
+    }
   }
 }
