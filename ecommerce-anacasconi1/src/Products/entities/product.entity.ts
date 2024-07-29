@@ -23,7 +23,7 @@ export class Product {
   @Column({type: "text", default: "https://exampleImage.com"})
   imgUrl: string;
 
-  @ManyToOne(()=> Category, category => category.products)
+  @ManyToOne(()=> Category)
   category: Category
 
   @ManyToMany(()=> OrderDetails, orderDetails => orderDetails.products)

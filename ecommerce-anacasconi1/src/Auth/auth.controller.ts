@@ -3,15 +3,16 @@ import { AuthService } from './auth.service';
 import { LoginUserDto } from './dto/loginUser.dto';
 import { UserDto } from 'src/users/dto/user.dto';
 import { TransformUsers } from 'src/interceptors/separatePassword';
+import { ApiTags } from '@nestjs/swagger';
 
 
-
+@ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
   @HttpCode(201)
   @Post('signin')
-  create(@Body() Credentials: LoginUserDto) {
+  Signin(@Body() Credentials: LoginUserDto) {
     return this.authService.SignIn(Credentials);
   }
 

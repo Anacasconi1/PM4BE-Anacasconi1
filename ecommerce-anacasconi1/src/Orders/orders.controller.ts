@@ -12,17 +12,20 @@ import { OrdersService } from './orders.service';
 import { AuthGuard } from 'src/guards/Auth.guard';
 import { OrderDto } from './dto/create-order.dto';
 import { TransformUsers } from 'src/interceptors/separatePassword';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Orders')
 @Controller('orders')
 export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
+  @ApiBearerAuth()
   @Get(':id')
   @UseGuards(AuthGuard)
   @UseInterceptors(TransformUsers)
-  async getOrder(@Param('id', ParseUUIDPipe) id){
+  async getOrder(@Param('id', ParseUUIDPipe) id:string){
     return await this.ordersService.getOrder(id)
   }
-
+  @ApiBearerAuth()
   @Post()
   @UseGuards(AuthGuard)
   @UseInterceptors(TransformUsers)

@@ -60,7 +60,6 @@ export class AuthService {
       if (!IsAUserWithEmail) {
         if (UserDto.password === UserDto.passwordConfirm) {
           const EncryptedPassword = await Bcypt.hash(UserDto.password, 10);
-          console.log(EncryptedPassword);
           const newUser = await this.userRepository.save({
             ...UserDto,
             password: EncryptedPassword,

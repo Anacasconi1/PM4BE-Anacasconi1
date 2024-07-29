@@ -17,7 +17,9 @@ import { AuthGuard } from 'src/guards/Auth.guard';
 import { RolesGuard } from 'src/guards/Role.guard';
 import { Roles } from 'src/decorators/role.decorator';
 import { Role } from 'src/roles.enum';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Products')
 @Controller('products')
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
@@ -43,6 +45,7 @@ export class ProductsController {
     return await this.productsService.postSeed();
   }
 
+  @ApiBearerAuth()
   @Put(':id')
   @Roles(Role.Admin)
   @UseGuards(AuthGuard, RolesGuard)

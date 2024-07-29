@@ -11,11 +11,11 @@ export class CategoriesService {
     private categoriesRepository: Repository<Category>,
   ) {}
 
-  async addCategories() {
+  async addCategoriesSeeder() {
     try {
       seeder.map(async (seed) => {
         const finder = await this.categoriesRepository.findOne({
-          where: { name: seed.category },
+          where: { name: seed.category }
         });
         if (!finder) {
           await this.categoriesRepository.save({ name: seed.category });
@@ -51,7 +51,7 @@ export class CategoriesService {
   async getCategories() {
     const AreCategoriesLoaded = await this.categoriesRepository.find()
     try {
-      if (AreCategoriesLoaded.length === 0) {
+      if (AreCategoriesLoaded.length > 0) {
         return await this.categoriesRepository.find();
       }
     } catch (error) {

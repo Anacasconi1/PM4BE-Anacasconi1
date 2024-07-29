@@ -28,8 +28,11 @@ export class OrdersService {
       const allProdsById = await this.productsRepository.find({
         where: { id: In(prod), stock: MoreThan(0) },
       });
+      
+      
       allProdsById.map(async (prod) => {
-        await this.productsRepository.save({ stock: prod.stock - 1, ...prod });
+        prod.stock = prod.stock - 1
+        await this.productsRepository.save(prod);
       });
       const userid = await this.userRepository.findOne({ where: { id: id } });
       const price = allProdsById.map((product) => product.price);
@@ -42,6 +45,7 @@ export class OrdersService {
         price: detailPrice,
         products: allProdsById,
       };
+      
       const orderDetails = await this.orderDetailsRepository.save(detail);
       const neworder = this.ordersRepository.create({
         user: userid,
@@ -65,8 +69,10 @@ export class OrdersService {
           orderDetails: true,
         },
       });
+      
       if(order){
         return order;
+
       }
     } catch (error) {
       throw new NotFoundException(
