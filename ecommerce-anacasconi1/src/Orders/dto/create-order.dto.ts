@@ -14,7 +14,7 @@ export class OrderDto {
 
     /**
      * @description "Aca se deben ingresar los id de los productos que desea comprar el usuario"
-     * @example "[{"id": "f06762ca-3107-4d49-b316-116410e661fa"}, {"id": "d51a06d5-9b75-4b57-bac2-de4d10c72000"}]"
+     * @example [{"id":"f06762ca-3107-4d49-b316-116410e661fa"},{"id":"d51a06d5-9b75-4b57-bac2-de4d10c72000"}]
      */
     @IsArray()
     @ArrayNotEmpty()

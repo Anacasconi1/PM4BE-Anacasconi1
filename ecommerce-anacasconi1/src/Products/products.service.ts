@@ -1,6 +1,5 @@
 import {
   BadRequestException,
-  ConflictException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -62,7 +61,7 @@ export class ProductsService {
           where: { name: prod.category },
         });
         if (!catFinder) {
-          throw new ConflictException(
+          throw new NotFoundException(
             'Debes cargar la categoria antes de cargar los productos',
           );
         } else {
@@ -81,7 +80,7 @@ export class ProductsService {
       });
       return 'Productos cargados con exito';
     } catch (error) {
-      throw new ConflictException(
+      throw new NotFoundException(
         'No se pudo completar la precarga de productos',
       );
     }

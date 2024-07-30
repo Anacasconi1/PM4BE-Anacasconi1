@@ -12,6 +12,11 @@ import { ProductsModule } from './products/products.module';
 import { FilesModule } from './files/files.module';
 import typeormConfig from './config/typeorm';
 import { JwtModule } from '@nestjs/jwt';
+import { ProductsService } from './products/products.service';
+import { CategoriesService } from './Categories/categories.service';
+import { Product } from './products/entities/Product.entity';
+import { Category } from './Categories/entities/category.entity';
+import { User } from './users/entities/user.entity';
 
 @Module({
   imports: [
@@ -34,10 +39,11 @@ import { JwtModule } from '@nestjs/jwt';
       global: true,
       signOptions: {expiresIn: '1h'},
       secret: process.env.JWT_SECRET
-    })
+    }), 
+    TypeOrmModule.forFeature([Product, Category, User])
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, ProductsService, CategoriesService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

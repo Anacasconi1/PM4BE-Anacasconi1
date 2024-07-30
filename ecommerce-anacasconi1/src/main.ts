@@ -2,10 +2,20 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { CategoriesService } from './Categories/categories.service';
+import { ProductsService } from './products/products.service';
+import { AppService } from './app.service';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(new ValidationPipe());
+  const categoriesService = app.get(CategoriesService)
+  const productsService = app.get(ProductsService)
+  const appService = app.get(AppService)
+
+  await appService.deleteUserExample()
+  await categoriesService.addCategoriesSeeder()
+  await productsService.postSeed()
 
   const swaggerConfig = new DocumentBuilder()
     .setTitle('Ecommerce-AnaCasconi1')

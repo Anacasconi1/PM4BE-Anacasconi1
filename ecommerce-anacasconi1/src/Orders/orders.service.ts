@@ -28,8 +28,6 @@ export class OrdersService {
       const allProdsById = await this.productsRepository.find({
         where: { id: In(prod), stock: MoreThan(0) },
       });
-      
-      
       allProdsById.map(async (prod) => {
         prod.stock = prod.stock - 1
         await this.productsRepository.save(prod);
@@ -60,6 +58,7 @@ export class OrdersService {
       );
     }
   }
+
   async getOrder(id: string) {
     try {
       const order = await this.ordersRepository.findOne({

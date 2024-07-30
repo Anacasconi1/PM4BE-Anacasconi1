@@ -1,4 +1,4 @@
-import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Category } from './entities/category.entity';
 import { Repository } from 'typeorm';
@@ -23,7 +23,7 @@ export class CategoriesService {
       });
       return { message: 'Se resolvió el seed correctamente' };
     } catch (error) {
-      throw new ConflictException('No es posible cargar el seed de categorias')
+      throw new NotFoundException('No es posible cargar el seed de categorias')
     }
   }
 
