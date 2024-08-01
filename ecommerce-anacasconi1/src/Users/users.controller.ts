@@ -15,12 +15,12 @@ import {
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UserDto } from './dto/user.dto';
-import { AuthGuard } from 'src/guards/Auth.guard';
+import { AuthGuard } from '../guards/Auth.guard';
 import { User } from './entities/user.entity';
-import { TransformUsers } from 'src/interceptors/separatePassword';
-import { RolesGuard } from 'src/guards/Role.guard';
-import { Roles } from 'src/decorators/role.decorator';
-import { Role } from 'src/roles.enum';
+import { TransformUsers } from '../interceptors/separatePassword';
+import { RolesGuard } from '../guards/Role.guard';
+import { Roles } from '../decorators/role.decorator';
+import { Role } from '../roles.enum';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Users')

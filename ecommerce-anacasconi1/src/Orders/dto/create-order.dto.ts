@@ -1,6 +1,6 @@
 
 import { ArrayNotEmpty, IsArray, IsNotEmpty, IsUUID } from "class-validator"
-import { Product } from "src/products/entities/Product.entity"
+import { Product } from "../../products/entities/Product.entity"
 
 
 export class OrderDto {

@@ -1,8 +1,8 @@
 import { Body, Controller, HttpCode, Post, UseInterceptors } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginUserDto } from './dto/loginUser.dto';
-import { UserDto } from 'src/users/dto/user.dto';
-import { TransformUsers } from 'src/interceptors/separatePassword';
+import { UserDto } from '../Users/dto/user.dto';
+import { TransformUsers } from '../interceptors/separatePassword';
 import { ApiTags } from '@nestjs/swagger';
 
 

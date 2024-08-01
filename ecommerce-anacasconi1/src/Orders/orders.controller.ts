@@ -9,9 +9,9 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { OrdersService } from './orders.service';
-import { AuthGuard } from 'src/guards/Auth.guard';
+import { AuthGuard } from '../guards/Auth.guard';
 import { OrderDto } from './dto/create-order.dto';
-import { TransformUsers } from 'src/interceptors/separatePassword';
+import { TransformUsers } from '../interceptors/separatePassword';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Orders')
