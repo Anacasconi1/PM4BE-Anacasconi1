@@ -11,7 +11,7 @@ export class AppService {
     private userRepository:  Repository<User>
   ){}
   async deleteUserExample () {
-      const Userexample = await this.userRepository.findOne({where: { email: 'mariano@gmail.com'}})
+      const Userexample = await this.userRepository.findOne({where: { email: 'mariano@gmail.com'}, relations:{orders:true}})
       if(Userexample){
         await this.userRepository.remove(Userexample)
       }

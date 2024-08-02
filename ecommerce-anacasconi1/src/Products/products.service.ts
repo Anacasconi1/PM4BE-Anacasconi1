@@ -108,8 +108,6 @@ export class ProductsService {
     const checkIfProductExist = await this.productRepository.findOne({
       where: { id: id },
     });
-    console.log(checkIfProductExist);
-    
     if (checkIfProductExist) {
       const { imgUrl, ...product } = productDto;
       const productUpdated = await this.productRepository.update(id, {
