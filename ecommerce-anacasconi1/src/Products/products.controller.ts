@@ -36,6 +36,7 @@ export class ProductsController {
   }
 
   @ApiBody({type: Product})
+  @UseGuards(AuthGuard)
   @Post()
   async createProduct(@Body() product): Promise<Product> {
     return await this.productsService.createProduct(product);
@@ -59,7 +60,7 @@ export class ProductsController {
     return ProductUpdated;
   }
 
-
+  @UseGuards(AuthGuard)
   @Delete(':id')
   async deleteProduct(@Param('id', ParseUUIDPipe) id: string) {
     const productDeleted = await this.productsService.deleteProduct(id);

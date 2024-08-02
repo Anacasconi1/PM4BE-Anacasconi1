@@ -14,6 +14,9 @@ import { FilesService } from './files.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { AuthGuard } from '../guards/Auth.guard';
 import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
+import { Roles } from 'src/decorators/role.decorator';
+import { Role } from 'src/roles.enum';
+import { RolesGuard } from 'src/guards/Role.guard';
 
 @ApiTags('Files')
 @Controller('files')
@@ -32,8 +35,10 @@ export class FilesController {
       }
     }
   })
+  
   @Put('uploadimage/:id')
-  @UseGuards(AuthGuard)
+  @Roles(Role.Admin)
+  @UseGuards(AuthGuard, RolesGuard)
   @UseInterceptors(FileInterceptor('file'))
   async uploadimg (@Param('id', ParseUUIDPipe) id: string, @UploadedFile(
     new ParseFilePipe({
