@@ -74,6 +74,7 @@ export class AuthService {
         throw new BadRequestException('El email provisto ya está registrado');
       }
     } catch (error) {
+      console.log(error)
       throw new BadRequestException(
         'El registo de usuario no pudo ejecutarse, revisa tu peticion',
       );

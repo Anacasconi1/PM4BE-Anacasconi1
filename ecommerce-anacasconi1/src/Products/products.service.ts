@@ -37,12 +37,13 @@ export class ProductsService {
   async getProductById(id: string): Promise<Product | string> {
     const product = await this.productRepository.findOne({
       where: {
-        id: id,
+        id,
       },
       relations: {
         category: true,
       },
     });
+    
     return product ? product : 'No se encontró el producto';
   }
 
@@ -107,6 +108,8 @@ export class ProductsService {
     const checkIfProductExist = await this.productRepository.findOne({
       where: { id: id },
     });
+    console.log(checkIfProductExist);
+    
     if (checkIfProductExist) {
       const { imgUrl, ...product } = productDto;
       const productUpdated = await this.productRepository.update(id, {

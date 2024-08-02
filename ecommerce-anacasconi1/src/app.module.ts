@@ -1,8 +1,8 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UsersModule } from './users/users.module';
-import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './Users/users.module';
+import { AuthModule } from './Auth/auth.module';
 import { LoggerMiddleware } from './middlewares/MorganManual';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -16,7 +16,7 @@ import { ProductsService } from './products/products.service';
 import { CategoriesService } from './Categories/categories.service';
 import { Product } from './products/entities/Product.entity';
 import { Category } from './Categories/entities/category.entity';
-import { User } from './users/entities/user.entity';
+import { User } from './Users/entities/user.entity';
 
 @Module({
   imports: [

@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { CategoriesService } from './categories.service';
 import { Category } from './entities/category.entity';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Categories')
 @Controller('categories')
@@ -13,6 +13,7 @@ export class CategoriesController {
     return await this.categoriesService.addCategoriesSeeder();
   }
 
+  @ApiBody({type: Category})
   @Post()
   async create(@Body() category: Category) {
     return await this.categoriesService.addCategory(category);
