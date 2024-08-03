@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { UserDto } from './dto/user.dto';
+import { queryParamsLimitPage } from '../helpers/QueryParamsLimitPage';
 
 @Injectable()
 export class UsersService {
@@ -19,7 +20,7 @@ export class UsersService {
         },
       });
       if (users.length > 0) {
-        const response = this.queryParamsLimitPage(
+        const response = queryParamsLimitPage(
           Number(limit),
           Number(page),
           users,
@@ -86,16 +87,5 @@ export class UsersService {
     }
   }
 
-  queryParamsLimitPage(limit: number, page: number, users: User[]) {
-    if (!limit) {
-      limit = 5;
-    }
-    if (!page) {
-      page = 1;
-    }
-    const start = (page - 1) * limit;
-    const end = start + limit;
-    users = users.slice(start, end);
-    return users;
-  }
+
 }
