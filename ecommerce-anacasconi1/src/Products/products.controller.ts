@@ -18,6 +18,7 @@ import { RolesGuard } from '../guards/Role.guard';
 import { Roles } from '../decorators/role.decorator';
 import { Role } from '../roles.enum';
 import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
+import { ProductDto } from './dto/products.dto';
 
 @ApiTags('Products')
 @Controller('products')
@@ -38,7 +39,7 @@ export class ProductsController {
   @ApiBody({type: Product})
   @UseGuards(AuthGuard)
   @Post()
-  async createProduct(@Body() product): Promise<Product> {
+  async createProduct(@Body() product: ProductDto): Promise<Product> {
     return await this.productsService.createProduct(product);
   }
 
@@ -56,6 +57,19 @@ export class ProductsController {
     const ProductUpdated = await this.productsService.updateProduct(
       id,
       ProductDto,
+    );
+    return ProductUpdated;
+  }
+
+  @ApiBearerAuth()
+  @ApiBody({type: 'number'})
+  @Put(':id')
+  @Roles(Role.Admin)
+  @UseGuards(AuthGuard, RolesGuard)
+  async UpdateStockProduct(@Param('id', ParseUUIDPipe) id: string, @Body() newStockToAdd:number ) {
+    const ProductUpdated = await this.productsService.addStock(
+      id,
+      newStockToAdd
     );
     return ProductUpdated;
   }

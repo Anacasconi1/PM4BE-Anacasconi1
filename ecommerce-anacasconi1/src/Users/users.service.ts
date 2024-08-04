@@ -57,10 +57,10 @@ export class UsersService {
       },
     });
     if (UserFind) {
-      const userRemovedId = await this.userRepository.delete(id);
+      const userRemovedId = await this.userRepository.remove(UserFind);
       return {
         message: 'Usuario eliminado con exito',
-        userRemovedId,
+        id: userRemovedId.id
       };
     } else {
       throw new NotFoundException(
