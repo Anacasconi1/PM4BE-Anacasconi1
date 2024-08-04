@@ -11,20 +11,11 @@ export class TransformUsers implements NestInterceptor  {
                 return cleanUser
             })
             return {User, statusCode: context.switchToHttp().getResponse().statusCode}
-            }else if (data.user) {
-                const {password, isadmin, ...userFiltered} = data.user
-                const response = {
-                    id: data.id,
-                    date: data.date,
-                    userFiltered,
-                    OrderDetails: data.orderDetails
-                }
-                return {response, statusCode: context.switchToHttp().getResponse().statusCode}
             }
             else{
-                const user = data.userbyid || data.newUser
-                const {password, passwordConfirm, isadmin,  ...User} = user
-                return {User, statusCode: context.switchToHttp().getResponse().statusCode}
+                const user = data.userbyid
+                const {password, isadmin, ...User} = user
+                return { User, statusCode: context.switchToHttp().getResponse().statusCode }
             }
         }))
     }
