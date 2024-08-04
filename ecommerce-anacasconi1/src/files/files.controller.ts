@@ -28,14 +28,13 @@ export class FilesController {
     schema:{
       type: 'object',
       properties: {
-        image: {
+        file: {
           type: 'string',
           format: 'binary'
         }
       }
     }
   })
-  
   @Put('uploadimage/:id')
   @Roles(Role.Admin)
   @UseGuards(AuthGuard, RolesGuard)
