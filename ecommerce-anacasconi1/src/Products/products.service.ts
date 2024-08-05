@@ -160,5 +160,4 @@ export class ProductsService {
       throw new NotFoundException('No se encontró el producto, revisa el id proporcionado')
     }
   }
-  
 }

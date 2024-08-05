@@ -62,19 +62,20 @@ export class ProductsController {
   }
 
   @ApiBearerAuth()
-  @ApiBody({type: 'number'})
-  @Put(':id')
+  @ApiBody({type: 'string'})
+  @Put('addstock/:id')
   @Roles(Role.Admin)
   @UseGuards(AuthGuard, RolesGuard)
-  async UpdateStockProduct(@Param('id', ParseUUIDPipe) id: string, @Body() newStockToAdd:number ) {
+  async UpdateStockProduct(@Param('id', ParseUUIDPipe) id: string, @Body() newStockToAdd:string ) {
     const ProductUpdated = await this.productsService.addStock(
       id,
-      newStockToAdd
+      Number(newStockToAdd)
     );
     return ProductUpdated;
   }
 
-  @UseGuards(AuthGuard)
+  @Roles(Role.Admin)
+  @UseGuards(AuthGuard, RolesGuard)
   @Delete(':id')
   async deleteProduct(@Param('id', ParseUUIDPipe) id: string) {
     const productDeleted = await this.productsService.deleteProduct(id);
